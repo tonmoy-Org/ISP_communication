@@ -64,7 +64,7 @@ const MainHeader: React.FC = () => {
     return (
         <Box sx={{ px: { xs: 2, md: 8.5 } }}>
             <Container maxWidth="xl">
-                <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none', py: { xs: 1.4, lg: 0.9 } }}>
+                <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none', py: { xs: 1, lg: 0.9 } }}>
                     <Toolbar sx={{ padding: { xs: '0 !important', md: '0 16px !important' }, justifyContent: { xs: 'space-between', md: 'flex-start' } }}>
                         {/* Logo */}
                         <Box sx={{ display: 'flex', alignItems: 'center', mr: { md: 5 } }}>
