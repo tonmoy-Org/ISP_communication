@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
     AppBar,
@@ -22,102 +22,97 @@ import Image from 'next/image';
 import logo from '@/public/logo/isp-logo.webp';
 
 const MainHeader: React.FC = () => {
-    const [openDrawer, setOpenDrawer] = React.useState<boolean>(false);
+    const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+    const [isClient, setIsClient] = useState<boolean>(false);
     const pathname = usePathname();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const closeDrawer = () => setOpenDrawer(false);
 
-    // Smooth scroll function for anchor links
     const handleAnchorClick = (e: React.MouseEvent, id: string) => {
         e.preventDefault();
         const element = document.getElementById(id);
         if (element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-
-            // Update URL without page reload
-            window.history.pushState({}, '', `#${id}`);
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (isClient) {
+                window.history.pushState({}, '', `#${id}`);
+            }
         }
     };
 
-    const linkStyles = (path: string) => ({
-        color: pathname === path || (path.startsWith('#') && window.location.hash === path) ? '#1B8633' : 'black',
-        fontWeight: pathname === path || (path.startsWith('#') && window.location.hash === path) ? 600 : 500,
-        cursor: 'pointer',
-        '&:hover': { color: '#1B8633' },
-        textDecoration: 'none'
-    });
+    const linkStyles = (path: string) => {
+        if (!isClient) return {
+            color: 'black',
+            fontWeight: 500,
+            cursor: 'pointer',
+            '&:hover': { color: '#1B8633' },
+            textDecoration: 'none',
+        };
+
+        return {
+            color: pathname === path || (path.startsWith('#') && window.location.hash === path) ? '#1B8633' : 'black',
+            fontWeight: pathname === path || (path.startsWith('#') && window.location.hash === path) ? 600 : 500,
+            cursor: 'pointer',
+            '&:hover': { color: '#1B8633' },
+            textDecoration: 'none',
+        };
+    };
 
     return (
         <Box sx={{ px: { xs: 2, md: 8.5 } }}>
             <Container maxWidth="xl">
-                <AppBar position="static" sx={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    boxShadow: 'none',
-                    py: { xs: 1.4, lg: 0.9 }
-                }}>
-                    <Toolbar sx={{
-                        padding: { xs: '0 !important', md: '0 16px !important' },
-                        justifyContent: { xs: 'space-between', md: 'flex-start' }
-                    }}>
-                        {/* Logo (Left side - both mobile & desktop) */}
+                <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none', py: { xs: 1.4, lg: 0.9 } }}>
+                    <Toolbar sx={{ padding: { xs: '0 !important', md: '0 16px !important' }, justifyContent: { xs: 'space-between', md: 'flex-start' } }}>
+                        {/* Logo */}
                         <Box sx={{ display: 'flex', alignItems: 'center', mr: { md: 5 } }}>
-                            <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-                                <Image
-                                    src={logo}
-                                    alt="Logo"
-                                    width={100}
-                                    height={100}
-                                    style={{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        maxWidth: '80px',
-                                        maxHeight: '80px'
-                                    }}
-                                />
+                            <Link href="/" passHref legacyBehavior>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Image src={logo} alt="Logo" width={80} height={80} />
+                                </Box>
                             </Link>
                         </Box>
                         <Box sx={{ flexGrow: 1 }} />
-                        {/* Desktop Navigation Links */}
-                        <Box sx={{
-                            display: { xs: 'none', md: 'flex' },
-                            gap: 5,
-                            flexGrow: 0
-                        }}>
-                            <Link href="/" style={linkStyles('/')}>Home</Link>
-                            <a
-                                href="#about"
-                                style={linkStyles('#about') as React.CSSProperties}
-                                onClick={(e) => handleAnchorClick(e, 'about')}
-                            >
-                                About Us
-                            </a>
-                            <Link href="/services" style={linkStyles('/services')}>Services</Link>
-                            <a
-                                href="#packages"
-                                style={linkStyles('#packages') as React.CSSProperties}
-                                onClick={(e) => handleAnchorClick(e, 'packages')}
-                            >
-                                Packages
-                            </a>
-                            <Link href="/sme" style={linkStyles('/sme')}>SME</Link>
-                            <Link href="http://10.10.10.3/" style={linkStyles('/ftp')}>FTP</Link>
-                            <Link href="/registration" style={linkStyles('/registration')}>Registration</Link>
-                            <Link href="/customer-care" style={linkStyles('/customer-care')}>Customer Care</Link>
-                            <Link href="/contacts" style={linkStyles('/contacts')}>Contacts</Link>
+
+                        {/* Desktop Navigation */}
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 5, flexGrow: 0 }}>
+                            <Link href="/" passHref>
+                                <Typography component="span" sx={linkStyles('/')}>Home</Typography>
+                            </Link>
+
+                            <Typography component="span" sx={linkStyles('#about')} onClick={(e) => handleAnchorClick(e, 'about')}>About Us</Typography>
+
+                            <Link href="/services" passHref>
+                                <Typography component="span" sx={linkStyles('/services')}>Services</Typography>
+                            </Link>
+
+                            <Typography component="span" sx={linkStyles('#packages')} onClick={(e) => handleAnchorClick(e, 'packages')}>Packages</Typography>
+
+                            <Link href="/sme" passHref>
+                                <Typography component="span" sx={linkStyles('/sme')}>SME</Typography>
+                            </Link>
+
+                            <Link href="http://10.10.10.3/" passHref>
+                                <Typography component="span" sx={linkStyles('/ftp')}>FTP</Typography>
+                            </Link>
+
+                            <Link href="/registration" passHref>
+                                <Typography component="span" sx={linkStyles('/registration')}>Registration</Typography>
+                            </Link>
+
+                            <Link href="/customer-care" passHref>
+                                <Typography component="span" sx={linkStyles('/customer-care')}>Customer Care</Typography>
+                            </Link>
+
+                            <Link href="/contacts" passHref>
+                                <Typography component="span" sx={linkStyles('/contacts')}>Contacts</Typography>
+                            </Link>
                         </Box>
 
                         {/* Mobile Menu Button */}
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            sx={{ display: { xs: 'flex', md: 'none' } }}
-                            onClick={() => setOpenDrawer(true)}
-                        >
+                        <IconButton edge="end" color="inherit" aria-label="menu" sx={{ display: { xs: 'flex', md: 'none' } }} onClick={() => setOpenDrawer(true)}>
                             <MenuIcon sx={{ fontSize: 45 }} />
                         </IconButton>
                     </Toolbar>
@@ -128,34 +123,11 @@ const MainHeader: React.FC = () => {
                     anchor="right"
                     open={openDrawer}
                     onClose={closeDrawer}
-                    PaperProps={{
-                        sx: {
-                            width: { xs: '80%', sm: '60%' },
-                            maxWidth: 320
-                        }
-                    }}
+                    PaperProps={{ sx: { width: { xs: '80%', sm: '60%' }, maxWidth: 320 } }}
                 >
-                    <Box
-                        sx={{
-                            p: 2,
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
-                    >
+                    <Box sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                            <Image
-                                src={logo}
-                                alt="Logo"
-                                width={80}
-                                height={80}
-                                style={{
-                                    width: 'auto',
-                                    height: 'auto',
-                                    maxWidth: '80px',
-                                    maxHeight: '80px'
-                                }}
-                            />
+                            <Image src={logo} alt="Logo" width={80} height={80} />
                         </Box>
                         <Divider sx={{ my: 1 }} />
                         <List sx={{ flexGrow: 1, overflow: 'auto' }}>
@@ -171,57 +143,29 @@ const MainHeader: React.FC = () => {
                                 { path: '/contacts', label: 'Contacts' }
                             ].map((item) => (
                                 <ListItem key={item.path} disablePadding>
-                                    <ListItemButton
-                                        onClick={() => {
-                                            closeDrawer();
-                                            if (item.path.startsWith('#')) {
+                                    {item.path.startsWith('#') ? (
+                                        <ListItemButton
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                closeDrawer();
                                                 const id = item.path.substring(1);
                                                 const element = document.getElementById(id);
                                                 if (element) {
-                                                    element.scrollIntoView({
-                                                        behavior: 'smooth',
-                                                        block: 'start',
-                                                    });
-                                                    window.history.pushState({}, '', item.path);
+                                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                    if (isClient) {
+                                                        window.history.pushState({}, '', item.path);
+                                                    }
                                                 }
-                                            }
-                                        }}
-                                        sx={{ px: 2 }}
-                                    >
-                                        {item.path.startsWith('#') ? (
-                                            <a
-                                                href={item.path}
-                                                style={{
-                                                    textDecoration: 'none',
-                                                    width: '100%',
-                                                    color: 'inherit'
-                                                }}
-                                            >
-                                                <ListItemText
-                                                    primary={item.label}
-                                                    primaryTypographyProps={{
-                                                        sx: linkStyles(item.path)
-                                                    }}
-                                                />
-                                            </a>
-                                        ) : (
-                                            <Link
-                                                href={item.path}
-                                                style={{
-                                                    textDecoration: 'none',
-                                                    width: '100%',
-                                                    color: 'inherit'
-                                                }}
-                                            >
-                                                <ListItemText
-                                                    primary={item.label}
-                                                    primaryTypographyProps={{
-                                                        sx: linkStyles(item.path)
-                                                    }}
-                                                />
-                                            </Link>
-                                        )}
-                                    </ListItemButton>
+                                            }}
+                                            sx={{ px: 2 }}
+                                        >
+                                            <ListItemText primary={item.label} primaryTypographyProps={{ sx: linkStyles(item.path) }} />
+                                        </ListItemButton>
+                                    ) : (
+                                        <ListItemButton component={Link} href={item.path} onClick={closeDrawer} sx={{ px: 2 }}>
+                                            <ListItemText primary={item.label} primaryTypographyProps={{ sx: linkStyles(item.path) }} />
+                                        </ListItemButton>
+                                    )}
                                 </ListItem>
                             ))}
                         </List>
