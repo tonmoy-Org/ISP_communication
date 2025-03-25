@@ -25,7 +25,7 @@ export default function ReturnRefundPolicy() {
                         1. General Policy
                     </Typography>
                     <Typography sx={{ color: '#757F95' }} paragraph>
-                        We strive for complete customer satisfaction. If you're not satisfied with our services, you may be eligible for a refund under the following conditions.
+                        We strive for complete customer satisfaction. If you are not satisfied with our services, you may be eligible for a refund under the following conditions.
                     </Typography>
 
                     <Typography sx={{ fontWeight: 'bold', fontSize: { xs: '1rem', md: '1.3rem' } }} gutterBottom mt={4}>
