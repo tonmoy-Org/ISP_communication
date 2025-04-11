@@ -3,6 +3,7 @@
 A modern corporate website developed for **ISP Communication Ltd**, a leading internet service provider in Bangladesh. This project highlights the company's internet services and packages and includes a secure customer portal for existing users.
 
 ![ISP Communication Screenshot](https://i.ibb.co.com/Fb1mj312/isp-communication-vercel-app-1.png)
+![Student Networking Hub Screenshot](/src/assets/Readme/2024-04-23%2015%2007%2005.png)
 
 ## Live Demo
 
